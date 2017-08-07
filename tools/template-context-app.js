@@ -29,6 +29,12 @@ function appSettings(settings) {
   if (settings.googleAnalytics) {
     result.googleAnalytics = settings.googleAnalytics;
   }
+  if (settings.oauthClientId) {
+    result.oauthAuthorizeUrl = settings.oauthAuthorizeUrl;
+    result.oauthClientId = settings.oauthClientId;
+    result.oauthEnabled = settings.oauthEnabled;
+    result.oauthRevokeUrl = settings.oauthRevokeUrl;
+  }
   return result;
 }
 
