@@ -40,7 +40,7 @@ describe('BrowserAction', function () {
 
     it('sets the title of the browser icon', function () {
       action.update(1, {state: TabState.states.ACTIVE});
-      assert.equal(fakeChromeBrowserAction.title, 'Hypothesis is active');
+      assert.equal(fakeChromeBrowserAction.title, 'Trive.news plugin is active');
     });
 
     it('does not set the title if there is badge text showing', function () {
@@ -71,7 +71,7 @@ describe('BrowserAction', function () {
 
     it('sets the title of the browser icon', function () {
       action.update(1, {state: TabState.states.ERRORED});
-      assert.equal(fakeChromeBrowserAction.title, 'Hypothesis failed to load');
+      assert.equal(fakeChromeBrowserAction.title, 'Trive.news plugin failed to load');
     });
 
     it('still sets the title even there is badge text showing', function () {
@@ -79,7 +79,7 @@ describe('BrowserAction', function () {
         state: TabState.states.ERRORED,
         annotationCount: 9,
       });
-      assert.equal(fakeChromeBrowserAction.title, 'Hypothesis failed to load');
+      assert.equal(fakeChromeBrowserAction.title, 'Trive.news plugin failed to load');
     });
 
     it('shows a badge', function () {
@@ -132,7 +132,7 @@ describe('BrowserAction', function () {
         state: TabState.states.INACTIVE,
         annotationCount: 0,
       });
-      assert.equal(fakeChromeBrowserAction.title, 'Hypothesis is inactive');
+      assert.equal(fakeChromeBrowserAction.title, 'Trive.news plugin is inactive');
     });
 
     it("truncates numbers greater than 999 to '999+'", function() {

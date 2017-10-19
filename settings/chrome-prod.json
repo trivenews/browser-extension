@@ -5,6 +5,7 @@
   "bouncerUrl": "https://hive.trive.news/",
   "serviceUrl": "https://hive.trive.news/",
   "websocketUrl": "wss://hive.trive.news/ws",
+  "googleAnalytics": "UA-108314335-1",
   "browserIsChrome": true,
   "appType": "chrome-extension"
 }
