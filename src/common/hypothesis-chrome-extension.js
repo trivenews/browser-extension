@@ -209,7 +209,7 @@ function HypothesisChromeExtension(dependencies) {
   function onTabCreated(tab) {
     // Clear the state in case there is old, conflicting data in storage.
     state.clearTab(tab.id);
-    state.activateTab(tab.id);
+    // state.activateTab(tab.id);
   }
 
   function onTabRemoved(tabId) {
