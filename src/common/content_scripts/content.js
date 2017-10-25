@@ -1,4 +1,4 @@
-
+showRatingsNextToLinks();
 function showRatingsNextToLinks() {
 	console.log("showing ratings");
 	var anchorTags = document.getElementsByTagName('a');
