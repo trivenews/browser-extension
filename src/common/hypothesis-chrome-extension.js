@@ -142,7 +142,7 @@ function HypothesisChromeExtension(dependencies) {
       state.activateTab(tab.id);
     }
   }
-
+// 
   /**
    * Returns the active state for a tab
    * which has just been navigated to.
@@ -182,6 +182,8 @@ function HypothesisChromeExtension(dependencies) {
         state.setState(tab.id, { directLinkQuery: query });
       }
     } else if (changeInfo.status === TAB_STATUS_COMPLETE) {
+      startHighlightingLinks(tab);
+
       var tabState = state.getState(tabId);
       var newActiveState = tabState.state;
       if (tabState.directLinkQuery) {
@@ -209,7 +211,15 @@ function HypothesisChromeExtension(dependencies) {
   function onTabCreated(tab) {
     // Clear the state in case there is old, conflicting data in storage.
     state.clearTab(tab.id);
+    // state.startHighlightingLinks(tab.id);
+    // startHighlightingLinks(tab);
     // state.activateTab(tab.id);
+  }
+
+  function startHighlightingLinks(tab) {
+    chromeTabs.executeScript(tab.id, {
+      file: "content_scripts/content.js"
+    });
   }
 
   function onTabRemoved(tabId) {

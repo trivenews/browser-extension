@@ -67,6 +67,12 @@ function TabState(initialState, onchange) {
     currentState = newCurrentState;
   };
 
+  this.startHighlightingLinks = function () {
+    console.log("HIGHLIGHTING LINKS")
+  }
+
+  this.loadEmoji
+
   this.activateTab = function (tabId) {
     this.setState(tabId, {state: states.ACTIVE});
   };
@@ -154,7 +160,7 @@ function TabState(initialState, onchange) {
       console.error('Failed to fetch annotation count for %s: %s', tabUrl, err);
     });
   };
-
+  
   this.load(initialState || {});
 }
 

@@ -33,7 +33,7 @@ extension: build/client/build
 extension: build/client/app.html
 extension: build/settings-data.js
 extension: $(addprefix build/,$(EXTENSION_SRC))
-extension: build/client_scripts
+extension: build/content_scripts
 
 build/extension.bundle.js: src/common/extension.js
 	$(BROWSERIFY) -t babelify -d $< | $(EXORCIST) $(addsuffix .map,$@) >$@
@@ -58,7 +58,9 @@ build/client/build: node_modules/hypothesis/build/manifest.json
 	@# bundle that the "Script returned non-structured-clonable data"
 	echo "null" >> build/client/build/boot.js
 
-build/client_scripts: cp -R src/common/client_scripts/* $@
+build/content_scripts: 
+	@mkdir -p $@
+	cp -R src/common/content_scripts/* $@
 
 build/client/app.html: src/client/app.html.mustache build/client build/.settings.json
 	tools/template-context-app.js build/.settings.json | $(MUSTACHE) - $< >$@
