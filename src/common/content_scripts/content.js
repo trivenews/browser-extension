@@ -1,8 +1,13 @@
+
+// var settings = require('./settings');
+settings = {
+	apiUrl: "https://hive.trive.news/api/"
+}
+
 showRatingsNextToLinks();
 function showRatingsNextToLinks() {
-	console.log("showing ratings");
 	var anchorTags = document.getElementsByTagName('a');
-	var linkUrls = [];
+	var linkUrls = {};
 	var anchorTagsByUrl = {}
 	for (var i = 0; i < anchorTags.length; ++i) {
 		if (!anchorTags[i].href)
@@ -11,15 +16,19 @@ function showRatingsNextToLinks() {
 		if (anchorTag.protocol != 'http:' && anchorTag.protocol != 'https:')
 			continue;
 		var url = anchorTag.protocol + "//" + anchorTag.host + anchorTag.pathname + anchorTag.search + anchorTag.hash;
-		linkUrls.push(url);
+		linkUrls[url] = true;
 		if (!anchorTagsByUrl[url])
 			anchorTagsByUrl[url] = [];
 		anchorTagsByUrl[url].push(i)
 	}
 
+	var linkUrlsArray = [];
+	for (var key in linkUrls)
+		linkUrlsArray.push(key);
 
-	postAjax("http://localhost:5000/api/annotations-for-links", {
-		links: linkUrls
+
+	postAjax(settings.apiUrl + "annotations-for-links", {
+		links: linkUrlsArray
 	}, function (data) {
 
 		data = JSON.parse(data);

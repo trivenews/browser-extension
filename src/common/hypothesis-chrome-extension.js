@@ -8,6 +8,7 @@ var TabStore = require('./tab-store');
 var directLinkQuery = require('./direct-link-query');
 var errors = require('./errors');
 var settings = require('./settings');
+var submitDocument = require('./submit-document')
 
 var TAB_STATUS_LOADING = 'loading';
 var TAB_STATUS_COMPLETE = 'complete';
@@ -44,13 +45,70 @@ function HypothesisChromeExtension(dependencies) {
   var chromeExtension = dependencies.chromeExtension;
   var chromeStorage = dependencies.chromeStorage;
   var chromeBrowserAction = dependencies.chromeBrowserAction;
-  var help  = new HelpPage(chromeTabs, dependencies.extensionURL);
+  var help = new HelpPage(chromeTabs, dependencies.extensionURL);
   var store = new TabStore(localStorage);
   var state = new TabState(store.all(), onTabStateChange);
   var browserAction = new BrowserAction(chromeBrowserAction);
   var sidebar = new SidebarInjector(chromeTabs, {
     extensionURL: dependencies.extensionURL,
     isAllowedFileSchemeAccess: dependencies.isAllowedFileSchemeAccess,
+  });
+  var clientId = null;
+  var authorization = null;
+
+  //init context menu
+  chrome.contextMenus.create({
+    id: "trive_add_to_queue_context_menu_click",
+    title: "Set Trive bounty",
+    onclick: function (info, tab) {
+      var url = info.pageUrl;
+      chrome.tabs.sendMessage(tab.id, { command: "showSetTriveBountyModal" }, function (response) {
+        console.log("received response ", response)
+      });
+    }
+  })
+
+  function enableSetTriveBounty(tab) {
+    chromeTabs.insertCSS(tab.id, {
+      file: "content_script_styles/confirm.css"
+    })
+    chromeTabs.executeScript(tab.id, {
+      file: "content_scripts/confirm.js"
+    });
+  }
+
+  //add listener to events
+  chrome.runtime.onMessage.addListener(function (data, sender, sendResponse) {
+    var tab = sender.tab;
+    console.log(tab);
+    switch (data.message) {
+      case "setClientId":
+        clientId = data.clientId;
+        break;
+      case "setAuthorization":
+        authorization = data.authorization
+        console.log("AUTH SET");
+        break;
+      case "confirmedSetTriveBounty":
+        submitDocument.submitDocument({
+          title: "aa",
+          web_uri: "jones.com"
+        }, {
+            "Authorization": "Bearer " + authorization,
+            "X-Client-Id": clientId
+          }, function (err, data) {
+            if (err) {
+              chrome.tabs.sendMessage(tab.id, { command: "showSetTriveBountyModalFailure", error:err }, function (response) {
+                console.log("received response ", response)
+              });
+            } else {
+              chrome.tabs.sendMessage(tab.id, { command: "showSetTriveBountyModalSuccess", data: data }, function (response) {
+                console.log("received response ", response)
+              });
+            }
+          });
+        break;
+    }
   });
 
   restoreSavedTabState();
@@ -99,7 +157,7 @@ function HypothesisChromeExtension(dependencies) {
       return;
     }
 
-    chromeTabs.create({url: settings.serviceUrl + 'welcome'}, function (tab) {
+    chromeTabs.create({ url: settings.serviceUrl + 'welcome' }, function (tab) {
       state.activateTab(tab.id);
     });
   };
@@ -142,7 +200,7 @@ function HypothesisChromeExtension(dependencies) {
       state.activateTab(tab.id);
     }
   }
-// 
+  // 
   /**
    * Returns the active state for a tab
    * which has just been navigated to.
@@ -183,6 +241,7 @@ function HypothesisChromeExtension(dependencies) {
       }
     } else if (changeInfo.status === TAB_STATUS_COMPLETE) {
       startHighlightingLinks(tab);
+      enableSetTriveBounty(tab);
 
       var tabState = state.getState(tabId);
       var newActiveState = tabState.state;
@@ -311,3 +370,15 @@ function HypothesisChromeExtension(dependencies) {
 }
 
 module.exports = HypothesisChromeExtension;
+
+
+function postAjax(url, data, success) {
+  var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+  xmlhttp.open("POST", url);
+  xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  xmlhttp.onreadystatechange = function () {
+    if (xmlhttp.readyState > 3 && xmlhttp.status == 200) { success(xmlhttp.responseText); }
+  };
+  xmlhttp.send(JSON.stringify(data));
+  return xmlhttp;
+}

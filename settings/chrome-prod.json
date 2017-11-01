@@ -1,5 +1,4 @@
 {
-  "buildType": "production",
   "apiUrl": "https://hive.trive.news/api/",
   "authDomain": "hive.trive.news",
   "bouncerUrl": "https://hive.trive.news/",

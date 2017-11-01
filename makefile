@@ -34,6 +34,7 @@ extension: build/client/app.html
 extension: build/settings-data.js
 extension: $(addprefix build/,$(EXTENSION_SRC))
 extension: build/content_scripts
+extension: build/content_script_styles
 
 build/extension.bundle.js: src/common/extension.js
 	$(BROWSERIFY) -t babelify -d $< | $(EXORCIST) $(addsuffix .map,$@) >$@
@@ -61,6 +62,10 @@ build/client/build: node_modules/hypothesis/build/manifest.json
 build/content_scripts: 
 	@mkdir -p $@
 	cp -R src/common/content_scripts/* $@
+
+build/content_script_styles: 
+	@mkdir -p $@
+	cp -R src/common/content_script_styles/* $@
 
 build/client/app.html: src/client/app.html.mustache build/client build/.settings.json
 	tools/template-context-app.js build/.settings.json | $(MUSTACHE) - $< >$@
