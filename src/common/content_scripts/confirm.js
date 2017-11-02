@@ -4,7 +4,8 @@ chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
 		case "showSetTriveBountyModal":
 			alertify.confirm("Would you like to set a bounty of 1 Trive token to help people get started?", function () {
 				chrome.runtime.sendMessage({
-					message: "confirmedSetTriveBounty", document: {
+					message: "confirmedSetTriveBounty",
+					document: {
 						web_uri: getDocumentHref(),
 						title: document.title.substr(0, 60),
 						group: "__world__"

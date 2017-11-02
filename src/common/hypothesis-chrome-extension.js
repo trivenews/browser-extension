@@ -90,10 +90,7 @@ function HypothesisChromeExtension(dependencies) {
         console.log("AUTH SET");
         break;
       case "confirmedSetTriveBounty":
-        submitDocument.submitDocument({
-          title: "aa",
-          web_uri: "jones.com"
-        }, {
+        submitDocument.submitDocument(data.document, {
             "Authorization": "Bearer " + authorization,
             "X-Client-Id": clientId
           }, function (err, data) {
