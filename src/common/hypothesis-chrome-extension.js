@@ -73,7 +73,7 @@ function HypothesisChromeExtension(dependencies) {
       file: "content_script_styles/confirm.css"
     })
     chromeTabs.executeScript(tab.id, {
-      file: "content_scripts/confirm.js"
+      file: "content_scripts/confirm-bounty.js"
     });
   }
 
@@ -274,7 +274,7 @@ function HypothesisChromeExtension(dependencies) {
 
   function startHighlightingLinks(tab) {
     chromeTabs.executeScript(tab.id, {
-      file: "content_scripts/content.js"
+      file: "content_scripts/display-truthiness-by-links.js"
     });
   }
 

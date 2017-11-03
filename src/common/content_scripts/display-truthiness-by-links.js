@@ -3,9 +3,11 @@
 settings = {
 	apiUrl: "https://hive.trive.news/api/"
 }
+console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
 
 showRatingsNextToLinks();
 function showRatingsNextToLinks() {
+	console.log("aa")
 	var anchorTags = document.getElementsByTagName('a');
 	var linkUrls = {};
 	var anchorTagsByUrl = {}
@@ -26,33 +28,41 @@ function showRatingsNextToLinks() {
 	for (var key in linkUrls)
 		linkUrlsArray.push(key);
 
-
+	console.log('bb')
 	postAjax(settings.apiUrl + "annotations-for-links", {
 		links: linkUrlsArray
 	}, function (data) {
 
 		data = JSON.parse(data);
-
+		console.log("Data is ", data)
 		for (var url in data.links) {
 			console.log(data.links)
 			if (!anchorTagsByUrl[url])
 				return;
 			var truthiness = data.links[url];
 			var color = getTruthinessColor(truthiness);
+
+			var imgURL = chrome.extension.getURL("images/confused.png");
 			anchorTagsByUrl[url].forEach(function (index) {
 				var anchorTag = anchorTagsByUrl[url][index];
-				// anchorTag.style.position = "relative"
-				// anchorTags[index].style.background = color;
+
+				var ratingEmoticon = document.createElement("img");
+				ratingEmoticon.style.width = "10px";
+				ratingEmoticon.style.height = "10px";
+				ratingEmoticon.style.display = "inline";
+				ratingColorBlock.style.marginLeft = "3px"
+				ratingEmoticon.src = imgURL;
+				anchorTags[index].appendChild(ratingEmoticon);
+
+				return 
+				//this is if you want color instead of icon
 				var ratingColorBlock = document.createElement("div");
 				ratingColorBlock.style.width = "10px";
 				ratingColorBlock.style.height = "10px";
 				ratingColorBlock.style.float = "right";
 				ratingColorBlock.style.marginLeft = "3px"
-				// ratingColorBlock.style.paddingTop = "3px";
 				ratingColorBlock.style.backgroundColor = color;
-				console.log(ratingColorBlock);
 				anchorTags[index].appendChild(ratingColorBlock)
-				console.log(anchorTags[index])
 			})
 		}
 	});

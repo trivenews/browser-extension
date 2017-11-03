@@ -1,0 +1,12 @@
+{
+  "buildType": "test",
+
+  "apiUrl": "https://hive.trive.news/api/",
+  "authDomain": "hive.trive.news",
+  "bouncerUrl": "https://hive.trive.news/",
+  "serviceUrl": "https://hive.trive.news/",
+  "websocketUrl": "wss://hive.trive.news/ws",
+  
+  "browserIsChrome": true,
+  "appType": "chrome-extension"
+}
