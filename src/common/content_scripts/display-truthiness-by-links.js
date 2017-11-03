@@ -1,11 +1,24 @@
 
 // var settings = require('./settings');
-settings = {
-	apiUrl: "https://hive.trive.news/api/"
-}
-console.log("jjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjjj")
+// settings = {
+// 	apiUrl: "https://hive.trive.news/api/"
+// }
 
-showRatingsNextToLinks();
+loadSettings()
+
+function doFile() {
+	showRatingsNextToLinks();
+}
+
+function loadSettings() {
+	chrome.runtime.sendMessage({
+		message: "requestSettings"
+	}, function (settings) {
+		window.settings = settings;
+		doFile();
+	});
+}
+
 function showRatingsNextToLinks() {
 	console.log("aa")
 	var anchorTags = document.getElementsByTagName('a');
@@ -28,8 +41,7 @@ function showRatingsNextToLinks() {
 	for (var key in linkUrls)
 		linkUrlsArray.push(key);
 
-	console.log('bb')
-	postAjax(settings.apiUrl + "annotations-for-links", {
+	postAjax(settings.apiUrl + "/annotations-for-links", {
 		links: linkUrlsArray
 	}, function (data) {
 
@@ -50,11 +62,11 @@ function showRatingsNextToLinks() {
 				ratingEmoticon.style.width = "10px";
 				ratingEmoticon.style.height = "10px";
 				ratingEmoticon.style.display = "inline";
-				ratingColorBlock.style.marginLeft = "3px"
+				ratingEmoticon.style.marginLeft = "3px"
 				ratingEmoticon.src = imgURL;
 				anchorTags[index].appendChild(ratingEmoticon);
 
-				return 
+				return
 				//this is if you want color instead of icon
 				var ratingColorBlock = document.createElement("div");
 				ratingColorBlock.style.width = "10px";

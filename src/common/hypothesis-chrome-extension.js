@@ -82,6 +82,9 @@ function HypothesisChromeExtension(dependencies) {
     var tab = sender.tab;
     console.log(tab);
     switch (data.message) {
+      case "requestSettings":
+        sendResponse(settings)
+        break;
       case "setClientId":
         clientId = data.clientId;
         break;
@@ -91,19 +94,19 @@ function HypothesisChromeExtension(dependencies) {
         break;
       case "confirmedSetTriveBounty":
         submitDocument.submitDocument(data.document, {
-            "Authorization": "Bearer " + authorization,
-            "X-Client-Id": clientId
-          }, function (err, data) {
-            if (err) {
-              chrome.tabs.sendMessage(tab.id, { command: "showSetTriveBountyModalFailure", error:err }, function (response) {
-                console.log("received response ", response)
-              });
-            } else {
-              chrome.tabs.sendMessage(tab.id, { command: "showSetTriveBountyModalSuccess", data: data }, function (response) {
-                console.log("received response ", response)
-              });
-            }
-          });
+          "Authorization": "Bearer " + authorization,
+          "X-Client-Id": clientId
+        }, function (err, data) {
+          if (err) {
+            chrome.tabs.sendMessage(tab.id, { command: "showSetTriveBountyModalFailure", error: err }, function (response) {
+              console.log("received response ", response)
+            });
+          } else {
+            chrome.tabs.sendMessage(tab.id, { command: "showSetTriveBountyModalSuccess", data: data }, function (response) {
+              console.log("received response ", response)
+            });
+          }
+        });
         break;
     }
   });
