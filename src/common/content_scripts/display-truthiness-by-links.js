@@ -90,18 +90,24 @@ function showRatingsNextToLinks() {
 			return "#FFDD00"
 		return "#57de36"
 	}
-
-	function getEmoticonUrl(truthiness) {
-		if (!truthiness)
-			truthiness = 0;
-		if (truthiness < -50)
-			return "images/emoji/crying.png"
-		if (truthiness < 0)
-			return "images/emoji/confused.png"
-		if (truthiness < 50)
-			return "images/emoji/eyebrow-raised.png"
-		return "images/emoji/smiling-teeth.png"
+	var NUM_EMOTICONS = 7;
+	function getEmoticonUrl(truthiness){
+		var scoreFraction = (truthiness + 100)/200
+		var emoticonNumber = Math.floor(scoreFraction*NUM_EMOTICONS) + 1;
+		return "images/emoji/official/" + emoticonNumber + ".png";
 	}
+
+	// function getEmoticonUrl(truthiness) {
+	// 	if (!truthiness)
+	// 		truthiness = 0;
+	// 	if (truthiness < -50)
+	// 		return "images/emoji/crying.png"
+	// 	if (truthiness < 0)
+	// 		return "images/emoji/confused.png"
+	// 	if (truthiness < 50)
+	// 		return "images/emoji/eyebrow-raised.png"
+	// 	return "images/emoji/smiling-teeth.png"
+	// }
 
 	function postAjax(url, data, success) {
 		var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance 
