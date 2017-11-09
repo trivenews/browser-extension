@@ -1,4 +1,3 @@
-
 // var settings = require('./settings');
 // settings = {
 // 	apiUrl: "https://hive.trive.news/api/"
@@ -54,14 +53,15 @@ function showRatingsNextToLinks() {
 			var truthiness = data.links[url];
 			var color = getTruthinessColor(truthiness);
 
-			var imgURL = chrome.extension.getURL("images/confused.png");
+			var imgURL = chrome.extension.getURL(getEmoticonUrl(truthiness));
 			anchorTagsByUrl[url].forEach(function (index) {
 				var anchorTag = anchorTagsByUrl[url][index];
 
 				var ratingEmoticon = document.createElement("img");
-				ratingEmoticon.style.width = "10px";
-				ratingEmoticon.style.height = "10px";
-				ratingEmoticon.style.display = "inline";
+				ratingEmoticon.style.width = "20px";
+				ratingEmoticon.style.height = "20px";
+				ratingEmoticon.style.display = "inline-block";
+				ratingEmoticon.style.verticalAlign = "middle";
 				ratingEmoticon.style.marginLeft = "3px"
 				ratingEmoticon.src = imgURL;
 				anchorTags[index].appendChild(ratingEmoticon);
@@ -91,12 +91,26 @@ function showRatingsNextToLinks() {
 		return "#57de36"
 	}
 
+	function getEmoticonUrl(truthiness) {
+		if (!truthiness)
+			truthiness = 0;
+		if (truthiness < -50)
+			return "images/emoji/crying.png"
+		if (truthiness < 0)
+			return "images/emoji/confused.png"
+		if (truthiness < 50)
+			return "images/emoji/eyebrow-raised.png"
+		return "images/emoji/smiling-teeth.png"
+	}
+
 	function postAjax(url, data, success) {
-		var xmlhttp = new XMLHttpRequest();   // new HttpRequest instance 
+		var xmlhttp = new XMLHttpRequest(); // new HttpRequest instance 
 		xmlhttp.open("POST", url);
 		xmlhttp.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
 		xmlhttp.onreadystatechange = function () {
-			if (xmlhttp.readyState > 3 && xmlhttp.status == 200) { success(xmlhttp.responseText); }
+			if (xmlhttp.readyState > 3 && xmlhttp.status == 200) {
+				success(xmlhttp.responseText);
+			}
 		};
 		xmlhttp.send(JSON.stringify(data));
 		return xmlhttp;
